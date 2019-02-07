@@ -6,14 +6,24 @@
     // Check for submit
     if (filter_has_var(INPUT_POST, 'submit')) {
         // Get form data
-        $name       = $_POST['name'];
-        $email      = $_POST['email'];
-        $message    = $_POST['message'];
+        $name       = htmlspecialchars($_POST['name']);
+        $email      = htmlspecialchars($_POST['email']);
+        $message    = htmlspecialchars($_POST['message']);
 
         // Check required fields
         if (!empty($email) && !empty($name) && !empty($message)) {
             // Passed
-            //echo 'Passed';
+            // Check email
+            if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+                // Failed validation
+                $msg ='Please enter a valid email address.';
+                $msgClass = 'alert-danger';
+            } else {
+                // Passed validation
+                
+
+            }
+
         } else {
             // Failed
             $msg = 'Please complete all fields';
@@ -46,15 +56,17 @@
         <form method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" name="name">
+                <input type="text" class="form-control" id="name" name="name" 
+                value="<?php echo isset($_POST['name']) ? $name : ''; ?>">
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="text" class="form-control" id="email" name="email">
+                <input type="text" class="form-control" id="email" name="email"
+                value="<?php echo isset($_POST['email']) ? $email : ''; ?>">
             </div>
             <div class="form-group">
                 <label for="message">Message</label>
-                <textarea name="message" class="form-control" id="message"></textarea>
+                <textarea name="message" class="form-control" id="message"><?php echo isset($_POST['message']) ? $message : ''; ?></textarea>
             </div>
             <button type="submit" name="submit" class="btn btn-primary">Submit</button>
         </form>
